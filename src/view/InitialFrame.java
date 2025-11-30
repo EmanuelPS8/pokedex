@@ -1,5 +1,7 @@
 package view;
 
+import database.connection.ConnectionFactory;
+
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -11,6 +13,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class InitialFrame extends JFrame {
 
@@ -62,8 +66,14 @@ public class InitialFrame extends JFrame {
 		contentPane.add(btnStart);
 		
 		btnStart.addActionListener(e -> {
-		    new MainFrame().setVisible(true);
-		    dispose(); // fecha a janela atual
+            try {
+                Connection connection = ConnectionFactory.getConnection("localhost", "3306", "root", "1234", "pokedex");
+
+                new MainFrame(connection).setVisible(true);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            dispose(); // fecha a janela atual
 		});
 
 

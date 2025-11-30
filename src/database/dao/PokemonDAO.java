@@ -68,10 +68,11 @@ public class PokemonDAO {
         return pokemonList;
     }
 
-    public boolean existsInTable(String table, int id) {
-        String sql = "SELECT 1 FROM " + table + " WHERE id = ? LIMIT 1";
+    public boolean existsInTable(String table, String pokemon, String tipo) {
+        String sql = "SELECT 1 FROM " + table + " WHERE pokemon = ? AND tipo = ? LIMIT 1";
         try (PreparedStatement pst = connection.prepareStatement(sql)) {
-            pst.setInt(1, id);
+            pst.setString(1, pokemon);
+            pst.setString(2, tipo);
             try (ResultSet rs = pst.executeQuery()) {
                 return rs.next();
             }
@@ -79,6 +80,7 @@ public class PokemonDAO {
             throw new RuntimeException("Erro checando duplicidade em " + table, e);
         }
     }
+
 
 
 
@@ -92,7 +94,7 @@ public class PokemonDAO {
             switch (p.getPokemonType().toLowerCase()) {
                 case "fogo": table = "tb_pokemon_fogo"; break;
                 case "eletrico": table = "tb_pokemon_eletrico"; break;
-//                case "voador": table = "tb_pokemon_voador"; break;
+                case "voador": table = "tb_pokemon_voador"; break;
                 default: table = null;
             }
 
@@ -101,8 +103,8 @@ public class PokemonDAO {
                 continue;
             }
 
-            if (existsInTable(table, p.getId())) {
-                System.out.println("O id: " + p.getId() + " já existe na tabela " + table );
+            if (existsInTable(table, p.getPokemonName(), p.getPokemonType())) {
+                System.out.println("Pokemon " + p.getPokemonName() + " (" + p.getPokemonType() + ") já existe em " + table);
                 continue;
             }
 
@@ -243,7 +245,7 @@ public class PokemonDAO {
     public void deleteAllDuplicatesFromTypeTables() {
         deleteDuplicatesFrom("tb_pokemon_fogo");
         deleteDuplicatesFrom("tb_pokemon_eletrico");
-//        deleteDuplicatesFrom("tb_pokemon_voador");
+        deleteDuplicatesFrom("tb_pokemon_voador");
     }
 
     public List<PokemonStatus> viewListPokemonStatus() {

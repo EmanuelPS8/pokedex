@@ -34,7 +34,7 @@ public class Main {
 //               pokemonDAO.insertPokemon("Venossaur", "planta");
 //               pokemonDAO.insertPokemon("gengar", "venenoso");
                 System.out.println("Pokemon inserido com sucesso!");
-                MainFrame mf = new MainFrame();
+                MainFrame mf = new MainFrame(connection);
                 
                
                 List<Pokemon> pokemonList = pokemonDAO.selectAll();
